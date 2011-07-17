@@ -1,0 +1,177 @@
+<?php
+
+include_once('mapadelic_demo.features.inc');
+
+define('MAPADELIC_UNIT', 'km');
+define('MAPADELIC_DEFAULT_DISTANCE', 9000);
+
+/* --- HOOKS ---------------------------------------------------------------- */
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function mapadelic_demo_form_views_exposed_form_alter(&$form, &$form_state) {
+  $view = views_get_current_view();
+
+  // add custom address and distance fields to the exposed form
+  if ('mapadelic_demo_store_locator' == $view->name) {
+    $form['location'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Address'),
+      '#default_value' => isset($_GET['address']) ? $_GET['address'] : '',
+      '#weight' => 1,
+    );
+    $form['distance'] = array(
+      '#type' => 'select',
+      '#title' => t('Distance'),
+      '#options' => _mapadelic_demo_get_distance_options(),
+      '#default_value' => isset($_GET['distance']) ? $_GET['distance'] : 'all',
+      '#weight' => 2,
+    );
+
+    // add a label to the type select widget
+    $form['tid']['#title'] = t('Type');
+
+    // modify the weight of the existing form elements
+    $form['tid']['#weight'] = 3;
+    $form['submit']['#weight'] = 4;
+
+    // use a custom theme function to render this specific exposed form
+    $form['#theme'] = 'mapadelic_demo_views_exposed_form';
+  }
+}
+
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function mapadelic_demo_views_pre_view(&$view, &$display_id, &$args) {
+  if ('mapadelic_demo_store_locator' == $view->name) {
+    // grab the distance from the URL or use the default value
+    $distance = !empty($_GET['distance']) && $_GET['distance'] != 'all' ? $_GET['distance'] : MAPADELIC_DEFAULT_DISTANCE;
+
+    // try to determine the location from the data entered by the user
+    $coords = _mapadelic_demo_get_coords();
+
+    // get the distance filter...
+    $filter = $view->get_item($display_id, 'filter', 'distance');
+
+    // ...modify its values...
+    $filter['value']['latitude'] = $coords['lat'];
+    $filter['value']['longitude'] = $coords['lon'];
+    $filter['value']['search_distance'] = $distance;
+    $filter['value']['search_units'] = MAPADELIC_UNIT;
+
+    // ...and add the modified version to the view
+    $view->set_item($display_id, 'filter', 'distance', $filter);
+  }
+}
+
+/**
+ * Implementation of hook_views_pre_render().
+ */
+function mapadelic_demo_views_pre_render(&$view) {
+  if ('mapadelic_demo_store_locator' == $view->name) {
+    if (empty($view->result)) {
+      // get the path of the current views display
+      $display = $view->current_display;
+      $path = $view->display[$display]->display_options['path'];
+
+      // display a nice error message...
+      $message = '';
+      if ('all' == $_GET['distance']) {
+        $message = t('Unable to locate any stores near @location.', array('@location' => $_GET['location']));
+      }
+      else {
+        $message = t('Unable to locate any stores within @distance @unit of @location.', array('@distance' => $_GET['distance'], '@unit' => MAPADELIC_UNIT, '@location' => $_GET['location']));
+      }
+      $message .= ' '. t('Please try the search again with a different starting address.');
+
+      drupal_set_message($message, 'error');
+
+      // ...and redirect to the default view which shows all stores
+      drupal_goto($path);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function mapadelic_demo_theme($existing, $type, $theme, $path) {
+  return array(
+    'mapadelic_demo_views_exposed_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/* --- UTILITY -------------------------------------------------------------- */
+
+/**
+ * Get the coordinates to use as the basis for the proximity search. If no
+ * location is given, we use the default center setting from the gmap module.
+ */
+function _mapadelic_demo_get_coords() {
+  $coords = array();
+
+  if (isset($_GET['location'])) {
+    // try to use the current geocoder to get the coordinates
+    $location = array(
+      'street' => $_GET['location'],
+      'country' => variable_get('location_default_country', 'us'),
+    );
+    $coords = location_latlon_exact($location);
+  }
+  else {
+    // grab the default coordinates from the gmap settings
+    $gmap_default = variable_get('gmap_default', array());
+    $gmap_center = explode(',', $gmap_default['latlong']);
+
+    $coords['lat'] = $gmap_center[0];
+    $coords['lon'] = $gmap_center[1];
+  }
+
+  return $coords;
+}
+
+/**
+ * Build an options array for the distance widget.
+ */
+function _mapadelic_demo_get_distance_options() {
+  $options = array('all' => t('- Any -'));
+
+  // modify the values in the array to change distances available in the dropdown
+  foreach (array(2, 5, 10, 20, 50) as $distance) {
+    $options[$distance] = $distance .' '. MAPADELIC_UNIT;
+  }
+
+  return $options;
+}
+
+/* --- THEME ---------------------------------------------------------------- */
+
+/**
+ * Theme function which renders the exposed form in a way that makes it easy
+ * to float all the form elements.
+ */
+function theme_mapadelic_demo_views_exposed_form($form) {
+  $output = '';
+
+  // add custom css for the exposed form
+  $path = drupal_get_path('module', 'mapadelic_demo');
+  drupal_add_css($path .'/mapadelic_demo.css');
+
+  // render all the form elements ordered by weight
+  foreach (element_children($form) as $element) {
+    // add all form elements except 'hidden' and 'token' to the output to
+    // improve the readability of the resuling URLs
+    if (!in_array($form[$element]['#type'], array('hidden', 'token'))) {
+      $output .= drupal_render($form[$element]);
+    }
+    else {
+      drupal_render($form[$element]);
+    }
+  }
+
+  return $output;
+}

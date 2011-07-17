@@ -1,0 +1,19 @@
+/* display all exposed filters on a single line */
+
+.view-store-locator .view-filters {
+  width: 100%;
+  clear: both;
+}
+
+#edit-location-wrapper,
+#edit-distance-wrapper,
+#edit-tid-wrapper {
+  float: left;
+  margin-right: 1em;
+}
+
+/* fix the position of the submit button */
+
+#edit-submit-mapadelic-demo-store-locator {
+  margin-top: 2.5em;
+}
