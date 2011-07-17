@@ -123,25 +123,25 @@ To make it possible to search by proximity, add a "Location: Distance / Proximit
 
 To make proximity searches work, we have to add a bit of code. Refer to the mapadelic_demo.module file distributed with this guide. This section describes what happens in the different parts of the code.
 
-	Line 3: Include the code necessary for Features to work
-   Line 5-6: Set up a default unit and distance
-	Line 13-42: Adds an address and distance field to the exposed form
-	Line 14: Gets the current view object and 
-	Line 18-30: Adds the location and distance fields
-	Line 33: Modifies the title of the taxonomy select widget
-	Line 36-37: Modifies the weights of existing form elements
-	Line 40: Attaches a theme function to the form
-	Line 47-67: Handles geocoding of the address entered by the user
-	Line 50: Determines the radius to use for the search
-	Line 53: Determines the coordinates to use as the center for the search
-	Line 56-65: Modifies the distance/proximity views filter
-	Line 72-95: Determines whether the proximity search yielded any results. If no stores were found, it redirects to the default view and displays a brief error message.
-	Line 100-106: Registers a custom theme function
-	Line 114-135: Determines the coordinates to use for the search
-	Line 119-123: Tries to use the default geocoder to determine the coordinates from the address entered by the user
-	Line 127-131: Gets the default coordinates from the GMap settings if the user hasn't entered an address
-	Line 140-149: Returns and array of distances for use in the distance widget
-	Line 157-177: A custom theme function which adds a bit of CSS and renders all the necessary form elements with minimal markup
+* **Line 3:** Include the code necessary for Features to work
+* **Line 5-6:** Set up a default unit and distance
+* **Line 13-42:** Adds an address and distance field to the exposed form
+* **Line 14:** Gets the current view object and
+* **Line 18-30:** Adds the location and distance fields
+* **Line 33:** Modifies the title of the taxonomy select widget
+* **Line 36-37:** Modifies the weights of existing form elements
+* **Line 40:** Attaches a theme function to the form
+* **Line 47-67:** Handles geocoding of the address entered by the user
+* **Line 50:** Determines the radius to use for the search
+* **Line 53:** Determines the coordinates to use as the center for the search
+* **Line 56-65:** Modifies the distance/proximity views filter
+* **Line 72-95:** Determines whether the proximity search yielded any results. If no stores were found, it redirects to the default view and displays a brief error message.
+* **Line 100-106:** Registers a custom theme function
+* **Line 114-135:** Determines the coordinates to use for the search
+* **Line 119-123:** Tries to use the default geocoder to determine the coordinates from the address entered by the user
+* **Line 127-131:** Gets the default coordinates from the GMap settings if the user hasn't entered an address
+* **Line 140-149:** Returns and array of distances for use in the distance widget
+* **Line 157-177:** A custom theme function which adds a bit of CSS and renders all the necessary form elements with minimal markup
 
 ## Niceties
 
