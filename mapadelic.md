@@ -59,7 +59,7 @@ Next, go to the "Geocoding options" tab and select "Town (city, village) level a
 
 ## Create a content type
 
-We will be building a store locatore, so let's get started by creating a new content type. Go to Administer > Content management > Content types > Add content type. We'll call it "Store" and make a few changes to the default settings (renaming the title and body fields, and disabling comments).
+We will be building a store locator, so let's get started by creating a new content type. Go to Administer > Content management > Content types > Add content type. We'll call it "Store" and make a few changes to the default settings (renaming the title and body fields, and disabling comments).
 
 When the content type has been created, click on the "Manage fields" link on the content type overview to add a location field. We'll call the new field "Store location" and give it the field name "field_mapadelic_demo_store_location". Select "Location" as the field type and click "Save" to add the field to the Store content type.
 
