@@ -10,6 +10,7 @@ To perform proximity searches with the OpenLayer modules, you will need to insta
 * OpenLayers
 * OpenLayers Proximity
 * Views
+* Views attach
 
 If you have access to Drush Make, you can use the following make file to install all the required software:
 
@@ -38,6 +39,7 @@ Enable the following modules:
 * OpenLayers: OpenLayers UI
 * OpenLayers: OpenLayers Views
 * Views: Views
+* Views: Views attach
 * Views: Views UI
 
 If drush is available, you can use the following command to enable all modules at once:

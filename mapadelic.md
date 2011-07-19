@@ -10,6 +10,7 @@ To perform proximity searches with the Mapadelic modules, you will need to insta
 * GMap
 * Location
 * Views
+* Views attach
 
 If you have access to Drush Make, you can use the following make file to install all the required software:
 
@@ -22,6 +23,7 @@ If you have access to Drush Make, you can use the following make file to install
 	projects[gmap][subdir] = contrib
 	projects[location][subdir] = contrib
 	projects[views][subdir] = contrib
+	projects[views_attach][subdir] = contrib
 
 When you have downloaded the software and run the Drupal installer, you are ready to configure your site. (Performing the basic Drupal installation tasks is not covered by this guide.)
 
@@ -34,12 +36,13 @@ Enable the following modules:
 * Location: GMap
 * Location: Location
 * Views: Views
+* Views: Views attach
 * Views: Views UI
 
 If drush is available, you can use the following command to enable all modules at once:
 
 	drush -y en content location_cck gmap location views \
-	  views_ui
+	  views_attach views_ui
 
 ## Basic configuration
 
