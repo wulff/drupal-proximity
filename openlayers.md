@@ -22,6 +22,7 @@ If you have access to Drush Make, you can use the following make file to install
 	projects[openlayers][subdir] = contrib
 	projects[openlayers_proximity][subdir] = contrib
 	projects[views][subdir] = contrib
+	projects[views_attach][subdir] = contrib
 
 When you have downloaded the software and run the Drupal installer, you are ready to configure your site. (Performing the basic Drupal installation tasks is not covered by this guide.)
 
@@ -43,7 +44,7 @@ If drush is available, you can use the following command to enable all modules a
 
 	drush -y en content ctools openlayers openlayers_cck \
 	  openlayers_proximity openlayers_ui openlayers_views \
-	  views views_ui
+	  views views_attach views_ui
 
 ## Basic configuration
 

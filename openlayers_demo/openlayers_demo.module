@@ -1,3 +1,21 @@
 <?php
 
 include_once('openlayers_demo.features.inc');
+
+/* --- HOOKS ---------------------------------------------------------------- */
+
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function openlayers_demo_views_pre_view(&$view, &$display_id, &$args) {
+  if ('openlayers_demo_stores_nearby' == $view->name) {
+    // get the proximity filter...
+    $filter = $view->get_item($display_id, 'filter', 'circle');
+
+    // ...modify the node value...
+    $filter['value']['node'] = $view->current_node->nid;
+
+    // ...and add the modified version to the view
+    $view->set_item($display_id, 'filter', 'circle', $filter);
+  }
+}
